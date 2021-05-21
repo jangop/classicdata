@@ -2,14 +2,18 @@
 Actual classic datasets.
 """
 
-from typing import Optional
-
 import numpy as np
-from sklearn.preprocessing import LabelEncoder
 
 from .dataset import Dataset
 from .files import provide_file
 from .settings import base_directory
+
+
+def translate(array: np.ndarray, table: dict):
+    """
+    Replace all objects in an array according to a table.
+    """
+    return np.ascontiguousarray([table[key] for key in array])
 
 
 class Ionosphere(Dataset):
@@ -44,6 +48,9 @@ class Ionosphere(Dataset):
         labels = np.genfromtxt(
             data_path, dtype=str, usecols=(self.n_features,), delimiter=","
         )
+
+        # Prettify labels.
+        labels = translate(labels, {"g": "good", "b": "bad"})
 
         # Encode labels.
         self.labels = self.label_encoder.fit_transform(labels)
@@ -83,6 +90,11 @@ class MagicGammaTelescope(Dataset):
         labels = np.genfromtxt(
             data_path, dtype=str, usecols=(self.n_features,), delimiter=","
         )
+
+        print(labels.shape)
+
+        # Prettify labels.
+        labels = translate(labels, {"g": "gamma", "h": "hadron"})
 
         # Encode labels.
         self.labels = self.label_encoder.fit_transform(labels)

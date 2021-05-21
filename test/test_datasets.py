@@ -3,7 +3,6 @@ Test basic properties of implemented datasets.
 """
 import unittest
 
-from classicdata import Ionosphere
 from classicdata.dataset import Dataset
 
 

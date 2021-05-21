@@ -2,7 +2,6 @@
 Base classes for datasets.
 """
 from abc import abstractmethod
-from functools import cached_property
 from typing import Optional
 
 import numpy as np
