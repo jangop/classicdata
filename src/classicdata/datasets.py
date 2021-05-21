@@ -33,10 +33,16 @@ class Ionosphere(Dataset):
         Load data.
         """
         data_path = provide_file(
-            url="https://archive.ics.uci.edu/ml/machine-learning-databases/ionosphere/ionosphere.data",
+            url=(
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/"
+                "ionosphere/ionosphere.data"
+            ),
             root_directory=base_directory,
             sub_directory=self.safe_name,
-            expected_hash="dd4f8d72bdbe61314c9e9b1916c19c8ff32dae9c264ce01e2b97b06ccdb780581cf8fa8a8058d78feafe62ea9797b21e94606591c18a020fb0920ac8284a8910",
+            expected_hash=(
+                "dd4f8d72bdbe61314c9e9b1916c19c8ff32dae9c264ce01e2b97b06ccdb78058"
+                "1cf8fa8a8058d78feafe62ea9797b21e94606591c18a020fb0920ac8284a8910"
+            ),
         )
 
         # Load points.
@@ -75,10 +81,16 @@ class MagicGammaTelescope(Dataset):
         Load data.
         """
         data_path = provide_file(
-            url="https://archive.ics.uci.edu/ml/machine-learning-databases/magic/magic04.data",
+            url=(
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/"
+                "magic/magic04.data"
+            ),
             root_directory=base_directory,
             sub_directory=self.safe_name,
-            expected_hash="1179fbcd4e71814aa3131bbb314c2fb702e5d475e7874346403c9c522f293798ae3717fbc689a0d64fc11e8b3e797cb8acb25f601ca12107d5a664cbbc506b1b",
+            expected_hash=(
+                "1179fbcd4e71814aa3131bbb314c2fb702e5d475e7874346403c9c522f293798"
+                "ae3717fbc689a0d64fc11e8b3e797cb8acb25f601ca12107d5a664cbbc506b1b"
+            ),
         )
 
         # Load points.

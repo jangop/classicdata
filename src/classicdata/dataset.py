@@ -9,7 +9,7 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
 
-from classicdata.settings import default_test_size, default_random_state
+from classicdata.settings import DEFAULT_TEST_SIZE, DEFAULT_RANDOM_STATE
 
 
 class Dataset:
@@ -32,7 +32,6 @@ class Dataset:
         """
         Expected to fill self.points and self.labels, fit self.label_encoder, and set self.loaded.
         """
-        pass
 
     def decode_labels(self, encoded_labels):
         """
@@ -49,7 +48,7 @@ class Dataset:
         Split and scale the dataset.
         """
         if test_size is None:
-            test_size = default_test_size
+            test_size = DEFAULT_TEST_SIZE
 
         if test_size == 0:
             train_index = np.ones_like(self.labels, dtype=bool)
@@ -59,7 +58,7 @@ class Dataset:
                 n_splits=1,
                 test_size=test_size,
                 train_size=train_size,
-                random_state=default_random_state,
+                random_state=DEFAULT_RANDOM_STATE,
             )
             train_index, test_index = next(splitter.split(self.points, self.labels))
 

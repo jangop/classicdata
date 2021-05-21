@@ -35,8 +35,8 @@ setup(
     python_requires=">=3.9, <4",
     install_requires=["loguru", "scikit-learn", "numpy", "appdirs"],
     extras_require={
-        "dev": ["check-manifest", "black"],
-        "test": ["coverage", "pytest", "black"],
+        "dev": ["check-manifest", "black", "pylint"],
+        "test": ["coverage", "pytest", "black", "pylint"],
     },
     project_urls={
         "Bug Reports": "https://github.com/jangop/classicdata/issues",
