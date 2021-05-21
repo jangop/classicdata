@@ -1,7 +1,7 @@
 """Loaders for classic datasets commonly used in Machine Learning.
 
 See:
-https://github.com/jangop/classic-data
+https://github.com/jangop/classicdata
 """
 
 import pathlib
@@ -12,18 +12,15 @@ here = pathlib.Path(__file__).parent.resolve()
 
 long_description = (here / "README.md").read_text(encoding="utf-8")
 
-# Arguments marked as "Required" below must be included for upload to PyPI.
-# Fields marked as "Optional" may be commented out.
-
 setup(
     name="classicdata",
     version="0.1.0-alpha",
     description="Loaders for classic datasets commonly used in Machine Learning",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/jangop/classic-data",
+    url="https://github.com/jangop/classicdata",
     author="Jan Philip Göpfert",
-    author_email="janphilip@gopfert.eu",  # Optional
+    author_email="janphilip@gopfert.eu",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Researchers",
@@ -42,7 +39,7 @@ setup(
         "test": ["coverage", "pytest", "black"],
     },
     project_urls={
-        "Bug Reports": "https://github.com/jangop/classic-data/issues",
-        "Source": "https://github.com/jangop/classic-data",
+        "Bug Reports": "https://github.com/jangop/classicdata/issues",
+        "Source": "https://github.com/jangop/classicdata",
     },
 )
