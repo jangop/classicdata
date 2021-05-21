@@ -5,6 +5,7 @@ Test file handling.
 import unittest
 
 from classicdata.files import provide_file
+from classicdata.settings import base_directory
 
 
 class HashTest(unittest.TestCase):
@@ -12,6 +13,8 @@ class HashTest(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             provide_file(
                 url="https://archive.ics.uci.edu/ml/machine-learning-databases/ionosphere/ionosphere.data",
+                root_directory=base_directory,
+                sub_directory="foobar",
                 expected_hash="foobar",
             )
 

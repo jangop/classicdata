@@ -7,8 +7,6 @@ from urllib.request import urlretrieve
 
 from loguru import logger
 
-from .settings import base_directory
-
 
 def compute_hash(path):
     """
@@ -23,18 +21,22 @@ def compute_hash(path):
     return file_hash.hexdigest()
 
 
-def provide_file(url, expected_hash=None) -> str:
+def provide_file(
+    url: str, root_directory: str, sub_directory: str, expected_hash: str = None
+) -> str:
     """
     Downloads if necessary and checks a file.
-    :rtype: object
     :param url: Where the file can be downloaded from.
+    :param root_directory: Where files are stored locally.
+    :param sub_directory: Where this file is stored below the root directory.
     :param expected_hash: Expected hash of the file.
     :return: Local path to the downloaded file.
     """
     # Prepare paths.
     filename = os.path.basename(url)
-    os.makedirs(base_directory, exist_ok=True)
-    local_path = os.path.join(base_directory, filename)
+    directory = os.path.join(root_directory, sub_directory)
+    os.makedirs(directory, exist_ok=True)
+    local_path = os.path.join(directory, filename)
 
     # Download file if it does not exist.
     if not os.path.exists(local_path):

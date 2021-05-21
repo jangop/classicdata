@@ -2,6 +2,11 @@
 Base classes for datasets.
 """
 from abc import abstractmethod
+from functools import cached_property
+from typing import Optional
+
+import numpy as np
+from sklearn.preprocessing import LabelEncoder
 
 
 class Dataset:
@@ -14,6 +19,9 @@ class Dataset:
         self.short_name = short_name
         self.long_name = long_name
 
+        self.points: Optional[np.ndarray] = None
+        self.labels: Optional[np.ndarray] = None
+        self.label_encoder = LabelEncoder()
         self.loaded: bool = False
 
     @abstractmethod
