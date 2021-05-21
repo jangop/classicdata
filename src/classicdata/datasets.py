@@ -49,3 +49,42 @@ class Ionosphere(Dataset):
         self.labels = self.label_encoder.fit_transform(labels)
 
         self.loaded = True
+
+
+class MagicGammaTelescope(Dataset):
+    """
+    Loader for the MAGIC Gamma Telescope Dataset.
+    """
+
+    def __init__(self):
+        super().__init__("magic", "Telescope", "MAGIC Gamma Telescope")
+
+        self.n_samples = 19020
+        self.n_features = 10
+        self.n_classes = 2
+
+    def load(self):
+        """
+        Load data.
+        """
+        data_path = provide_file(
+            url="https://archive.ics.uci.edu/ml/machine-learning-databases/magic/magic04.data",
+            root_directory=base_directory,
+            sub_directory=self.safe_name,
+            expected_hash="1179fbcd4e71814aa3131bbb314c2fb702e5d475e7874346403c9c522f293798ae3717fbc689a0d64fc11e8b3e797cb8acb25f601ca12107d5a664cbbc506b1b",
+        )
+
+        # Load points.
+        self.points = np.genfromtxt(
+            data_path, dtype=float, usecols=range(self.n_features), delimiter=","
+        )
+
+        # Load labels
+        labels = np.genfromtxt(
+            data_path, dtype=str, usecols=(self.n_features,), delimiter=","
+        )
+
+        # Encode labels.
+        self.labels = self.label_encoder.fit_transform(labels)
+
+        self.loaded = True

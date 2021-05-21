@@ -48,6 +48,6 @@ def provide_file(
         logger.critical(f"hash for {local_path}: {actual_hash}")
     elif expected_hash != actual_hash:
         raise RuntimeError(
-            f"{local_path} hashes to {actual_hash} instead of expected {expected_hash}"
+            f"`{local_path}` hashes to `{actual_hash}` instead of expected `{expected_hash}`"
         )
     return local_path
