@@ -2,10 +2,14 @@
 Base classes for datasets.
 """
 from abc import abstractmethod
-from typing import Optional
+from typing import Optional, Union
 
 import numpy as np
+from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import StandardScaler
+
+from classicdata.settings import default_test_size, default_random_state
 
 
 class Dataset:
@@ -29,3 +33,43 @@ class Dataset:
         Expected to fill self.points and self.labels, fit self.label_encoder, and set self.loaded.
         """
         pass
+
+    def decode_labels(self, encoded_labels):
+        """
+        Decode labels.
+        """
+        return self.label_encoder.inverse_transform(encoded_labels)
+
+    def split_for_training(
+        self,
+        test_size: Optional[Union[float, int]] = None,
+        train_size: Optional[Union[float, int]] = None,
+    ):
+        """
+        Split and scale the dataset.
+        """
+        if test_size is None:
+            test_size = default_test_size
+
+        if test_size == 0:
+            train_index = np.ones_like(self.labels, dtype=bool)
+            test_index = np.zeros_like(self.labels, dtype=bool)
+        else:
+            splitter = StratifiedShuffleSplit(
+                n_splits=1,
+                test_size=test_size,
+                train_size=train_size,
+                random_state=default_random_state,
+            )
+            train_index, test_index = next(splitter.split(self.points, self.labels))
+
+        scaler = StandardScaler()
+        train_points = scaler.fit_transform(self.points[train_index])
+        train_labels = self.labels[train_index]
+        if test_size == 0:
+            test_points = self.points[test_index]
+        else:
+            test_points = scaler.transform(self.points[test_index])
+        test_labels = self.labels[test_index]
+
+        return train_points, train_labels, test_points, test_labels
