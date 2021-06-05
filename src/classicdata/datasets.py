@@ -22,11 +22,14 @@ class Ionosphere(Dataset):
     """
 
     def __init__(self):
-        super().__init__("ionosphere", "Ionosphere", "Ionosphere")
-
-        self.n_samples = 351
-        self.n_features = 34
-        self.n_classes = 2
+        super().__init__(
+            safe_name="ionosphere",
+            short_name="Ionosphere",
+            long_name="Ionosphere",
+            n_samples=351,
+            n_features=34,
+            n_classes=2,
+        )
 
     def load(self):
         """
@@ -45,21 +48,21 @@ class Ionosphere(Dataset):
             ),
         )
 
-        # Load points.
-        self.points = np.genfromtxt(
+        # Load _points.
+        self._points = np.genfromtxt(
             data_path, dtype=float, usecols=range(self.n_features), delimiter=","
         )
 
-        # Load labels
+        # Load _targets
         labels = np.genfromtxt(
             data_path, dtype=str, usecols=(self.n_features,), delimiter=","
         )
 
-        # Prettify labels.
+        # Prettify _targets.
         labels = translate(labels, {"g": "good", "b": "bad"})
 
-        # Encode labels.
-        self.labels = self.label_encoder.fit_transform(labels)
+        # Encode _targets.
+        self._targets = self.label_encoder.fit_transform(labels)
 
         self.loaded = True
 
@@ -70,11 +73,14 @@ class MagicGammaTelescope(Dataset):
     """
 
     def __init__(self):
-        super().__init__("magic", "Telescope", "MAGIC Gamma Telescope")
-
-        self.n_samples = 19020
-        self.n_features = 10
-        self.n_classes = 2
+        super().__init__(
+            safe_name="magic",
+            short_name="Telescope",
+            long_name="MAGIC Gamma Telescope",
+            n_samples=19020,
+            n_features=10,
+            n_classes=2,
+        )
 
     def load(self):
         """
@@ -93,22 +99,22 @@ class MagicGammaTelescope(Dataset):
             ),
         )
 
-        # Load points.
-        self.points = np.genfromtxt(
+        # Load _points.
+        self._points = np.genfromtxt(
             data_path, dtype=float, usecols=range(self.n_features), delimiter=","
         )
 
-        # Load labels
+        # Load _targets
         labels = np.genfromtxt(
             data_path, dtype=str, usecols=(self.n_features,), delimiter=","
         )
 
         print(labels.shape)
 
-        # Prettify labels.
+        # Prettify _targets.
         labels = translate(labels, {"g": "gamma", "h": "hadron"})
 
-        # Encode labels.
-        self.labels = self.label_encoder.fit_transform(labels)
+        # Encode _targets.
+        self._targets = self.label_encoder.fit_transform(labels)
 
         self.loaded = True

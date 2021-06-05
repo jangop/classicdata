@@ -17,25 +17,53 @@ class Dataset:
     Abstract base class for datasets.
     """
 
-    def __init__(self, safe_name: str, short_name: str, long_name: str):
+    def __init__(
+        self,
+        *,
+        safe_name: str,
+        short_name: str,
+        long_name: str,
+        n_samples: int,
+        n_features: int,
+        n_classes: int,
+    ):
         self.safe_name = safe_name
         self.short_name = short_name
         self.long_name = long_name
+        self.n_samples = n_samples
+        self.n_features = n_features
+        self.n_classes = n_classes
 
-        self.points: Optional[np.ndarray] = None
-        self.labels: Optional[np.ndarray] = None
+        self._points: Optional[np.ndarray] = None
+        self._targets: Optional[np.ndarray] = None
         self.label_encoder = LabelEncoder()
         self.loaded: bool = False
+
+    @property
+    def points(self) -> np.ndarray:
+        if not self.loaded:
+            self.load()
+        return self._points
+
+    @property
+    def targets(self) -> np.ndarray:
+        if not self.loaded:
+            self.load()
+        return self._targets
+
+    @property
+    def labels(self) -> np.ndarray:
+        return self.targets
 
     @abstractmethod
     def load(self):
         """
-        Expected to fill self.points and self.labels, fit self.label_encoder, and set self.loaded.
+        Expected to fill self._points and self._targets, fit self.label_encoder, and set self.loaded.
         """
 
     def decode_labels(self, encoded_labels):
         """
-        Decode labels.
+        Decode encoded labels.
         """
         return self.label_encoder.inverse_transform(encoded_labels)
 
@@ -51,8 +79,8 @@ class Dataset:
             test_size = DEFAULT_TEST_SIZE
 
         if test_size == 0:
-            train_index = np.ones_like(self.labels, dtype=bool)
-            test_index = np.zeros_like(self.labels, dtype=bool)
+            train_index = np.ones_like(self.targets, dtype=bool)
+            test_index = np.zeros_like(self.targets, dtype=bool)
         else:
             splitter = StratifiedShuffleSplit(
                 n_splits=1,
@@ -60,15 +88,15 @@ class Dataset:
                 train_size=train_size,
                 random_state=DEFAULT_RANDOM_STATE,
             )
-            train_index, test_index = next(splitter.split(self.points, self.labels))
+            train_index, test_index = next(splitter.split(self.points, self.targets))
 
         scaler = StandardScaler()
         train_points = scaler.fit_transform(self.points[train_index])
-        train_labels = self.labels[train_index]
+        train_targets = self.targets[train_index]
         if test_size == 0:
             test_points = self.points[test_index]
         else:
             test_points = scaler.transform(self.points[test_index])
-        test_labels = self.labels[test_index]
+        test_targets = self.targets[test_index]
 
-        return train_points, train_labels, test_points, test_labels
+        return train_points, train_targets, test_points, test_targets
