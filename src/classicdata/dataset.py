@@ -17,6 +17,9 @@ class Dataset:
     Abstract base class for datasets.
     """
 
+    # pylint: disable=too-many-instance-attributes
+    # This class is supposed to provide plenty of information in a convenient way.
+
     def __init__(
         self,
         *,
@@ -41,24 +44,34 @@ class Dataset:
 
     @property
     def points(self) -> np.ndarray:
+        """
+        All points of this dataset.
+        """
         if not self.loaded:
             self.load()
         return self._points
 
     @property
     def targets(self) -> np.ndarray:
+        """
+        All targets of this dataset, matching `.points`.
+        """
         if not self.loaded:
             self.load()
         return self._targets
 
     @property
     def labels(self) -> np.ndarray:
+        """
+        Alias of `.targets`.
+        """
         return self.targets
 
     @abstractmethod
     def load(self):
         """
-        Expected to fill self._points and self._targets, fit self.label_encoder, and set self.loaded.
+        Expected to fill self._points and self._targets,
+        fit self.label_encoder, and set self.loaded.
         """
 
     def decode_labels(self, encoded_labels):

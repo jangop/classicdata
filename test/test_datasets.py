@@ -14,10 +14,9 @@ class TestLoading(unittest.TestCase):
         for DatasetImplementation in Dataset.__subclasses__():
             with self.subTest(Dataset=DatasetImplementation):
                 dataset_instance = DatasetImplementation()
-                dataset_instance.load()
 
-                # `loaded` should be set.
-                self.assertTrue(dataset_instance.loaded)
+                # `.loaded` should not be set.
+                self.assertFalse(dataset_instance.loaded)
 
                 # Number of points and number of features should be correctly defined.
                 self.assertEqual(
@@ -34,8 +33,10 @@ class TestLoading(unittest.TestCase):
                 recoded_labels = dataset_instance.label_encoder.transform(
                     dataset_instance.decode_labels(dataset_instance.labels)
                 )
-
                 self.assertTrue(np.all(recoded_labels == dataset_instance.labels))
+
+                # `.loaded` should be set.
+                self.assertTrue(dataset_instance.loaded)
 
                 # Count random split.
                 (
