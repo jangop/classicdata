@@ -15,11 +15,17 @@ from classicdata.settings import DEFAULT_TEST_SIZE, DEFAULT_RANDOM_STATE
 
 
 class CitationWarning(UserWarning):
-    pass
+    """
+    Reminder to cite a dataset's source.
+    """
 
 
 @dataclass
 class Source:
+    """
+    Contains information about where datasets come from.
+    """
+
     name: str
     url: str
     citation_url: str
@@ -27,6 +33,9 @@ class Source:
     mentioned: bool = field(default=False, repr=False, hash=False, compare=False)
 
     def mention(self):
+        """
+        Issue a reminder to cite the source.
+        """
         if not self.mentioned:
             warnings.warn(
                 f"You are using data from {self.name}. "
