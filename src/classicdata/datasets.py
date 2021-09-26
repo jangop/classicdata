@@ -4,7 +4,7 @@ Actual classic datasets.
 
 import numpy as np
 
-from .dataset import Dataset
+from .dataset import Dataset, Source
 from .files import provide_file
 from .settings import base_directory
 
@@ -14,6 +14,13 @@ def translate(array: np.ndarray, table: dict):
     Replace all objects in an array according to a table.
     """
     return np.ascontiguousarray([table[key] for key in array])
+
+
+uci_ml_repo = Source(
+    name="UCI Machine Learning Repository",
+    url="https://archive.ics.uci.edu",
+    citation_url="https://archive.ics.uci.edu/ml/citation_policy.html",
+)
 
 
 class Ionosphere(Dataset):
@@ -29,6 +36,7 @@ class Ionosphere(Dataset):
             n_samples=351,
             n_features=34,
             n_classes=2,
+            source=uci_ml_repo,
         )
 
     def load(self):
@@ -80,6 +88,7 @@ class MagicGammaTelescope(Dataset):
             n_samples=19020,
             n_features=10,
             n_classes=2,
+            source=uci_ml_repo,
         )
 
     def load(self):

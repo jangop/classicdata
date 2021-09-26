@@ -1,7 +1,9 @@
 """
 Base classes for datasets.
 """
+import warnings
 from abc import abstractmethod
+from dataclasses import dataclass, field
 from typing import Optional, Union
 
 import numpy as np
@@ -10,6 +12,29 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
 
 from classicdata.settings import DEFAULT_TEST_SIZE, DEFAULT_RANDOM_STATE
+
+
+class CitationWarning(UserWarning):
+    pass
+
+
+@dataclass
+class Source:
+    name: str
+    url: str
+    citation_url: str
+
+    mentioned: bool = field(default=False, repr=False, hash=False, compare=False)
+
+    def mention(self):
+        if not self.mentioned:
+            warnings.warn(
+                f"You are using data from {self.name}. "
+                f"When publishing your work, please consider appropriate citations. "
+                f"See {self.citation_url}",
+                CitationWarning,
+            )
+        self.mentioned = True
 
 
 class Dataset:
@@ -29,6 +54,7 @@ class Dataset:
         n_samples: int,
         n_features: int,
         n_classes: int,
+        source: Source,
     ):
         self.safe_name = safe_name
         self.short_name = short_name
@@ -36,11 +62,15 @@ class Dataset:
         self.n_samples = n_samples
         self.n_features = n_features
         self.n_classes = n_classes
+        self.source = source
 
         self._points: Optional[np.ndarray] = None
         self._targets: Optional[np.ndarray] = None
         self.label_encoder = LabelEncoder()
         self.loaded: bool = False
+
+        # Mention source.
+        self.source.mention()
 
     @property
     def points(self) -> np.ndarray:
