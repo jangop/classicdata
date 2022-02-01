@@ -6,7 +6,7 @@ https://github.com/jangop/classicdata
 
 import pathlib
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 here = pathlib.Path(__file__).parent.resolve()
 

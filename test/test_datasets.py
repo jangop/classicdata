@@ -6,7 +6,7 @@ import unittest
 import numpy as np
 
 from classicdata import Ionosphere
-from classicdata.dataset import Dataset, CitationWarning
+from classicdata.dataset import CitationWarning, Dataset
 
 
 class TestLoading(unittest.TestCase):
