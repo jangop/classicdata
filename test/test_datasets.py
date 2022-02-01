@@ -70,5 +70,11 @@ class TestLoading(unittest.TestCase):
         self.assertEqual(test_labels.shape[0], 0)
 
 
+class TestNames(unittest.TestCase):
+    def test_unique_safe_names(self):
+        safe_names = [dataset().safe_name for dataset in Dataset.__subclasses__()]
+        self.assertCountEqual(safe_names, set(safe_names))
+
+
 if __name__ == "__main__":
     unittest.main()
