@@ -33,7 +33,7 @@ setup(
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     python_requires=">=3.9, <4",
-    install_requires=["loguru", "scikit-learn", "numpy", "appdirs"],
+    install_requires=["loguru", "scikit-learn", "numpy", "appdirs", "scipy"],
     extras_require={
         "dev": ["check-manifest", "black", "pylint"],
         "test": ["coverage", "pytest", "black", "pylint"],

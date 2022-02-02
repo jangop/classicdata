@@ -7,6 +7,7 @@ from .datasets.magic import MagicGammaTelescope
 from .datasets.pendigits import PenDigits
 from .datasets.robnav import RobotNavigation
 from .datasets.segmentation import ImageSegmentation
+from .datasets.usps import USPS
 
 __all__ = [
     "Ionosphere",
@@ -15,4 +16,5 @@ __all__ = [
     "PenDigits",
     "RobotNavigation",
     "ImageSegmentation",
+    "USPS",
 ]
