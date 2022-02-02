@@ -10,7 +10,7 @@ import numpy as np
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 
-from classicdata.settings import DEFAULT_RANDOM_STATE, DEFAULT_TEST_SIZE
+from .settings import DEFAULT_RANDOM_STATE, DEFAULT_TEST_SIZE
 
 
 class CitationWarning(UserWarning):

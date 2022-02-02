@@ -45,7 +45,6 @@ class USPS(Dataset):
 
         # Decompress.
         with tarfile.open(file_path) as directory:
-            print(directory.list())
             decompressed = directory.extractfile("usps_resampled/usps_resampled.mat")
             # Parse matlab format.
             mat = scipy.io.loadmat(decompressed)
