@@ -41,7 +41,7 @@ class RobotNavigation(Dataset):
         )
 
         self._points = np.genfromtxt(
-            data_path, dtype=np.float, usecols=range(self.n_features), delimiter=","
+            data_path, dtype=float, usecols=range(self.n_features), delimiter=","
         )
         labels = np.genfromtxt(
             data_path, dtype=str, usecols=(self.n_features,), delimiter=","

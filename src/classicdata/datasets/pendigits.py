@@ -31,9 +31,9 @@ class PenDigits(Dataset):
         """
 
         def load_points_and_targets(file_path):
-            data = np.genfromtxt(file_path, dtype=np.float, delimiter=",")
-            points = data[:, :-1].astype(np.int)
-            targets = data[:, -1].astype(np.int)
+            data = np.genfromtxt(file_path, dtype=float, delimiter=",")
+            points = data[:, :-1].astype(int)
+            targets = data[:, -1].astype(int)
 
             return points, targets
 

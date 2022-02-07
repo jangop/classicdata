@@ -42,7 +42,7 @@ class LetterRecognition(Dataset):
 
         self._points = np.genfromtxt(
             data_path,
-            dtype=np.int,
+            dtype=int,
             usecols=range(1, self.n_features + 1),
             delimiter=",",
         )

@@ -52,8 +52,6 @@ class MagicGammaTelescope(Dataset):
             data_path, dtype=str, usecols=(self.n_features,), delimiter=","
         )
 
-        print(labels.shape)
-
         # Prettify _targets.
         labels = translate(labels, {"g": "gamma", "h": "hadron"})
 

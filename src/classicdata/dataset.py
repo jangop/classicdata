@@ -105,6 +105,16 @@ class Dataset:
         """
         return self.targets
 
+    @property
+    def balance(self) -> float:
+        """
+        Indicate how balanced the dataset is.
+        """
+        n_samples_per_class = [
+            np.count_nonzero(self.labels == label) for label in range(self.n_classes)
+        ]
+        return min(n_samples_per_class) / max(n_samples_per_class)
+
     @abstractmethod
     def load(self):
         """

@@ -23,10 +23,11 @@ def list_datasets(table_format: str) -> str:
             else dataset.short_name
         )
         entry = {
-            "Name": name,
+            "Dataset": name,
             "# Samples": dataset.n_samples,
             "# Features": dataset.n_features,
             "# Classes": dataset.n_classes,
+            "Balance": dataset.balance,
         }
         return entry
 
@@ -34,7 +35,9 @@ def list_datasets(table_format: str) -> str:
         format_dataset(dataset, link=table_format == "github")
         for dataset in all_datasets
     ]
-    return tabulate.tabulate(data, headers="keys", tablefmt=table_format)
+    return tabulate.tabulate(
+        data, headers="keys", tablefmt=table_format, floatfmt=".2f"
+    )
 
 
 def cli():
