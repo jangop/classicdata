@@ -3,13 +3,13 @@ Ionosphere
 """
 import numpy as np
 
-from ..dataset import Dataset
+from ..dataset import PublicDataset
 from ..files import provide_file
 from ..settings import base_directory
 from ..utility import translate, uci_ml_repo
 
 
-class Ionosphere(Dataset):
+class Ionosphere(PublicDataset):
     """
     Loader for the Ionosphere Dataset.
     """

@@ -6,13 +6,13 @@ import unittest
 import numpy as np
 
 from classicdata import Ionosphere
-from classicdata.dataset import CitationWarning, Dataset
+from classicdata.dataset import CitationWarning, Dataset, PublicDataset
 
 
 class TestLoading(unittest.TestCase):
     def test_loading(self):
         with self.assertWarns(CitationWarning):
-            for DatasetImplementation in Dataset.__subclasses__():
+            for DatasetImplementation in PublicDataset.__subclasses__():
                 with self.subTest(Dataset=DatasetImplementation):
                     dataset_instance = DatasetImplementation()
 
@@ -72,7 +72,7 @@ class TestLoading(unittest.TestCase):
 
 class TestNames(unittest.TestCase):
     def test_unique_safe_names(self):
-        safe_names = [dataset().safe_name for dataset in Dataset.__subclasses__()]
+        safe_names = [dataset().safe_name for dataset in PublicDataset.__subclasses__()]
         self.assertCountEqual(safe_names, set(safe_names))
 
 

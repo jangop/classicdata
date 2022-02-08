@@ -3,13 +3,13 @@ Letter Recognition
 """
 import numpy as np
 
-from ..dataset import Dataset
+from ..dataset import PublicDataset
 from ..files import provide_file
 from ..settings import base_directory
 from ..utility import uci_ml_repo
 
 
-class LetterRecognition(Dataset):
+class LetterRecognition(PublicDataset):
     """
     Loader for Letter Recognition.
     """
