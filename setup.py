@@ -43,7 +43,7 @@ setup(
     ],
     extras_require={
         "dev": ["check-manifest", "black", "pylint"],
-        "test": ["coverage", "pytest", "pytest-cov", "black", "pylint"],
+        "test": ["coverage", "pytest", "black", "pylint"],
     },
     project_urls={
         "Bug Reports": "https://github.com/jangop/classicdata/issues",
