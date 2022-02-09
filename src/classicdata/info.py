@@ -5,16 +5,18 @@ import warnings
 
 import tabulate
 
-from .dataset import CitationWarning, Dataset
+from .dataset import CitationWarning, Dataset, PublicDataset
 
 
 def list_datasets(table_format: str) -> str:
     """
-    List all implemented datasets in form of a table.
+    List all implemented public datasets in form of a table.
     """
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", CitationWarning)
-        all_datasets = [implementation() for implementation in Dataset.__subclasses__()]
+        all_datasets = [
+            implementation() for implementation in PublicDataset.__subclasses__()
+        ]
 
     def format_dataset(dataset: Dataset, link: bool) -> dict:
         name = (

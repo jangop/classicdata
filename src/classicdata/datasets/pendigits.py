@@ -3,13 +3,13 @@ Pen-Based Recognition of Handwritten Digits
 """
 import numpy as np
 
-from ..dataset import Dataset
+from ..dataset import PublicDataset
 from ..files import provide_file
 from ..settings import base_directory
 from ..utility import uci_ml_repo
 
 
-class PenDigits(Dataset):
+class PenDigits(PublicDataset):
     """
     Loader for Pen-Based Recognition of Handwritten Digits.
     """

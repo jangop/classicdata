@@ -6,12 +6,12 @@ import tarfile
 import numpy as np
 import scipy.io
 
-from ..dataset import Dataset, Source
+from ..dataset import PublicDataset, Source
 from ..files import provide_file
 from ..settings import base_directory
 
 
-class USPS(Dataset):
+class USPS(PublicDataset):
     """
     Loader for USPS Handwritten Digits
     """

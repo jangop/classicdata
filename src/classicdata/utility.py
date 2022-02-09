@@ -4,7 +4,7 @@ Miscellaneous
 
 import numpy as np
 
-from classicdata.dataset import Source
+from .dataset import Source
 
 
 def translate(array: np.ndarray, table: dict):

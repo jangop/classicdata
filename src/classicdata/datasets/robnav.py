@@ -3,13 +3,13 @@ Wall-Following Robot Navigation
 """
 import numpy as np
 
-from ..dataset import Dataset
+from ..dataset import PublicDataset
 from ..files import provide_file
 from ..settings import base_directory
 from ..utility import uci_ml_repo
 
 
-class RobotNavigation(Dataset):
+class RobotNavigation(PublicDataset):
     """
     Loader for Wall-Following Robot Navigation Data dataset.
     """

@@ -2,7 +2,7 @@
 Base classes for datasets.
 """
 import warnings
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Optional, Union
 
@@ -45,7 +45,7 @@ class Source:
         self.mentioned = True
 
 
-class Dataset:
+class Dataset(ABC):
     """
     Abstract base class for datasets.
     """
@@ -59,10 +59,10 @@ class Dataset:
         safe_name: str,
         short_name: str,
         long_name: str,
-        n_samples: int,
-        n_features: int,
-        n_classes: int,
-        source: Source,
+        n_samples: Optional[int],
+        n_features: Optional[int],
+        n_classes: Optional[int],
+        source: Optional[Source],
     ):
         self.safe_name = safe_name
         self.short_name = short_name
@@ -78,7 +78,8 @@ class Dataset:
         self.loaded: bool = False
 
         # Mention source.
-        self.source.mention()
+        if self.source is not None:
+            self.source.mention()
 
     @property
     def points(self) -> np.ndarray:
@@ -161,3 +162,94 @@ class Dataset:
         test_targets = self.targets[test_index]
 
         return train_points, train_targets, test_points, test_targets
+
+
+class PublicDataset(Dataset, ABC):
+    """
+    Abstract base class for a published dataset that is available online.
+    """
+
+    # pylint: disable=useless-super-delegation
+    # Annotations differ. Fixed in a future release of pylint.
+
+    def __init__(
+        self,
+        *,
+        safe_name: str,
+        short_name: str,
+        long_name: str,
+        n_samples: int,
+        n_features: int,
+        n_classes: int,
+        source: Source,
+    ):
+        super().__init__(
+            safe_name=safe_name,
+            short_name=short_name,
+            long_name=long_name,
+            n_samples=n_samples,
+            n_features=n_features,
+            n_classes=n_classes,
+            source=source,
+        )
+
+
+class GenericDataset(Dataset):
+    """
+    Convenience class to load comma-separated values.
+    """
+
+    def __init__(
+        self,
+        path: str,
+        *,
+        safe_name: str,
+        short_name: str,
+        long_name: Optional[str] = None,
+        n_samples: Optional[int] = None,
+        n_features: Optional[int] = None,
+        n_classes: Optional[int] = None,
+        source: Optional[Source] = None,
+    ):
+        if long_name is None:
+            long_name = short_name
+        super().__init__(
+            safe_name=safe_name,
+            short_name=short_name,
+            long_name=long_name,
+            n_samples=n_samples,
+            n_features=n_features,
+            n_classes=n_classes,
+            source=source,
+        )
+        self.path = path
+
+    def load(self):
+        # Load data.
+        data = np.genfromtxt(self.path)
+        points = data[:, :-1]
+        labels = data[:, -1].astype(int)
+
+        # Extract numbers.
+        n_points, n_features = points.shape
+        n_classes = len(np.unique(labels))
+
+        # Set/Check numbers.
+        if self.n_samples is None:
+            self.n_samples = n_points
+        else:
+            assert self.n_samples == n_points
+        if self.n_features is None:
+            self.n_features = n_features
+        else:
+            assert self.n_features == n_features
+        if self.n_classes is None:
+            self.n_classes = n_classes
+        else:
+            assert self.n_classes == n_classes
+
+        # Set data.
+        self._points = points
+        self._targets = self.label_encoder.fit_transform(labels)
+
+        self.loaded = True
