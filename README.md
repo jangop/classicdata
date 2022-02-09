@@ -29,3 +29,14 @@ ionosphere = Ionosphere()
 
 # Use ionosphere.points and ionosphere.labels...
 ```
+
+## Related Projects
+
+There are other projects. They are more mature, more robust, more better.
+That is why this project is called **classic**data. Sometimes you need small, simple datasets.
+Other times, consider the following projects.
+
+- [OpenML](https://www.openml.org/): better, faster, stronger; more complex, though
+- [sklearn.datasets](https://scikit-learn.org/stable/datasets.html): limited selection; no metadata
+- [torchvision.datasets](https://pytorch.org/vision/stable/datasets.html): limited selection; datasets too modern (big)
+- [TensorFlow Datasets](https://www.tensorflow.org/datasets): datasets too modern (big)
