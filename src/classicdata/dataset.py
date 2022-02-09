@@ -201,16 +201,18 @@ class GenericDataset(Dataset):
 
     def __init__(
         self,
+        path: str,
         *,
         safe_name: str,
         short_name: str,
-        long_name: str,
-        n_samples: Optional[int],
-        n_features: Optional[int],
-        n_classes: Optional[int],
-        source: Optional[Source],
-        path: str,
+        long_name: Optional[str] = None,
+        n_samples: Optional[int] = None,
+        n_features: Optional[int] = None,
+        n_classes: Optional[int] = None,
+        source: Optional[Source] = None,
     ):
+        if long_name is None:
+            long_name = short_name
         super().__init__(
             safe_name=safe_name,
             short_name=short_name,
@@ -226,7 +228,7 @@ class GenericDataset(Dataset):
         # Load data.
         data = np.genfromtxt(self.path)
         points = data[:, :-1]
-        labels = data[:, -1]
+        labels = data[:, -1].astype(int)
 
         # Extract numbers.
         n_points, n_features = points.shape

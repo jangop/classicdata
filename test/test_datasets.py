@@ -1,12 +1,13 @@
 """
 Test basic properties of implemented datasets.
 """
+import os
 import unittest
 
 import numpy as np
 
 from classicdata import Ionosphere
-from classicdata.dataset import CitationWarning, Dataset, PublicDataset
+from classicdata.dataset import CitationWarning, GenericDataset, PublicDataset
 
 
 class TestLoading(unittest.TestCase):
@@ -74,6 +75,37 @@ class TestNames(unittest.TestCase):
     def test_unique_safe_names(self):
         safe_names = [dataset().safe_name for dataset in PublicDataset.__subclasses__()]
         self.assertCountEqual(safe_names, set(safe_names))
+
+
+class TestGenericDatasets(unittest.TestCase):
+    data_directory = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        "data",
+    )
+    data_path = os.path.join(data_directory, "arbitrary.txt")
+
+    def test_loading_vague(self):
+        short_name = "Arbitrary"
+        generic_dataset = GenericDataset(
+            self.data_path, safe_name="arbitrary", short_name=short_name
+        )
+        generic_dataset.load()
+        self.assertEqual(generic_dataset.n_samples, 6)
+        self.assertEqual(generic_dataset.n_features, 3)
+        self.assertEqual(generic_dataset.n_classes, 4)
+        self.assertEqual(generic_dataset.long_name, short_name)
+
+    def test_loading_explicit(self):
+        generic_dataset = GenericDataset(
+            self.data_path,
+            safe_name="arbitrary",
+            short_name="Arbitrary",
+            long_name="Arbitrary Numbers",
+            n_samples=6,
+            n_features=3,
+            n_classes=4,
+        )
+        generic_dataset.load()
 
 
 if __name__ == "__main__":
