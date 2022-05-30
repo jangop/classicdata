@@ -38,19 +38,22 @@ class ImageSegmentation(PublicDataset):
                 short_name="vertical-edge-std",
                 long_name="Vertical Edge Standard Deviation",
                 type=FeatureType.NUMERICAL,
-                description="The standard deviation of the contrast of horizontally adjacent pixels.",
+                description="The standard deviation of "
+                "the contrast of horizontally adjacent pixels.",
             ),
             Feature(
                 short_name="horizontal-edge-mean",
                 long_name="Horizontal Edge Mean",
                 type=FeatureType.NUMERICAL,
-                description="The mean of the contrast of vertically adjacent pixels.",
+                description="The mean of the contrast of "
+                "vertically adjacent pixels.",
             ),
             Feature(
                 short_name="horizontal-edge-std",
                 long_name="Horizontal Edge Standard Deviation",
                 type=FeatureType.NUMERICAL,
-                description="The standard deviation of the contrast of vertically adjacent pixels.",
+                description="The standard deviation of "
+                "the contrast of vertically adjacent pixels.",
             ),
             Feature(
                 short_name="intensity-mean",
@@ -80,19 +83,25 @@ class ImageSegmentation(PublicDataset):
                 short_name="excess-red-mean",
                 long_name="Excess Red Mean",
                 type=FeatureType.NUMERICAL,
-                description="The mean of the red channel of the pixels minus the mean of the green and blue channel of the pixels.",
+                description="The mean of the red channel of "
+                "the pixels minus the mean of "
+                "the green and blue channel of the pixels.",
             ),
             Feature(
                 short_name="excess-blue-mean",
                 long_name="Excess Blue Mean",
                 type=FeatureType.NUMERICAL,
-                description="The mean of the blue channel of the pixels minus the mean of the red and green channel of the pixels.",
+                description="The mean of the blue channel of "
+                "the pixels minus the mean of "
+                "the red and green channel of the pixels.",
             ),
             Feature(
                 short_name="excess-green-mean",
                 long_name="Excess Green Mean",
                 type=FeatureType.NUMERICAL,
-                description="The mean of the green channel of the pixels minus the mean of the red and blue channel of the pixels.",
+                description="The mean of the green channel of "
+                "the pixels minus the mean of "
+                "the red and blue channel of the pixels.",
             ),
             Feature(
                 short_name="value-mean",

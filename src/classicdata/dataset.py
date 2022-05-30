@@ -33,6 +33,10 @@ class FeatureTypeWarning(UserWarning):
 
 
 class FeatureType(enum.Enum):
+    """
+    Describes the type of a feature.
+    """
+
     BINARY = enum.auto()
     CATEGORICAL = enum.auto()
     ORDINAL = enum.auto()
@@ -44,7 +48,7 @@ class FeatureType(enum.Enum):
         """
         Whether the data matches the feature type.
         """
-        values, counts = np.unique(data, return_counts=True)
+        values = np.unique(data, return_counts=False)
         n_values = len(values)
         n_points = len(data)
         if self == FeatureType.BINARY:
@@ -54,14 +58,16 @@ class FeatureType(enum.Enum):
             if n_values / n_points > 0.8:
                 warnings.warn(
                     f"{self.name} feature has {n_values} unique values, "
-                    f"which is over 80% of the total number of points ({n_points}).",
+                    f"which is over 80% "
+                    f"of the total number of points ({n_points}).",
                     FeatureTypeWarning,
                 )
         elif self == FeatureType.NUMERICAL:
             if n_values / n_points < 0.8:
                 warnings.warn(
                     f"{self.name} feature has {n_values} unique values, "
-                    f"which is less than 80% of the total number of points ({n_points}).",
+                    f"which is less than 80% "
+                    f"of the total number of points ({n_points}).",
                     FeatureTypeWarning,
                 )
         return True
@@ -69,6 +75,10 @@ class FeatureType(enum.Enum):
 
 @dataclass
 class Feature:
+    """
+    Contains information about a feature.
+    """
+
     short_name: str
     long_name: str
     type: FeatureType
@@ -138,7 +148,8 @@ class Dataset(ABC):
         if self.features is not None and self.n_features is not None:
             if len(self.features) != self.n_features:
                 raise ValueError(
-                    f" {self.n_features} features specified, but {self.features} has length {len(self.features)}"
+                    f" {self.n_features} features specified, "
+                    f"but {self.features} has length {len(self.features)}"
                 )
 
         # Mention source.
@@ -187,20 +198,22 @@ class Dataset(ABC):
         """
         if self.features is None:
             return FeatureType.UNKNOWN
-        else:
-            feature_types = {feature.type for feature in self.features}
-            if len(feature_types) == 1:
-                return feature_types.pop()
-            elif feature_types == {FeatureType.BINARY, FeatureType.CATEGORICAL}:
-                return FeatureType.CATEGORICAL
-            elif feature_types <= {
-                FeatureType.BINARY,
-                FeatureType.CATEGORICAL,
-                FeatureType.NUMERICAL,
-            }:
-                return FeatureType.MIXED
-            else:
-                return FeatureType.UNKNOWN
+
+        feature_types = {feature.type for feature in self.features}
+        if len(feature_types) == 1:
+            return feature_types.pop()
+
+        if feature_types == {FeatureType.BINARY, FeatureType.CATEGORICAL}:
+            return FeatureType.CATEGORICAL
+
+        if feature_types <= {
+            FeatureType.BINARY,
+            FeatureType.CATEGORICAL,
+            FeatureType.NUMERICAL,
+        }:
+            return FeatureType.MIXED
+
+        return FeatureType.UNKNOWN
 
     @abstractmethod
     def load(self):
@@ -210,6 +223,9 @@ class Dataset(ABC):
         """
 
     def feature_types_match(self, raise_exception: bool) -> bool:
+        """
+        Check if the feature types specified match the data.
+        """
         if self.features is None:
             return True
         matches = [
@@ -218,7 +234,8 @@ class Dataset(ABC):
         ]
         if not all(matches) and raise_exception:
             raise FeatureTypeMismatch(
-                f"Data does not match feature type for {self.features[matches.index(False)]}"
+                f"Data does not match feature type for "
+                f"{self.features[matches.index(False)]}"
             )
         return all(matches)
 
