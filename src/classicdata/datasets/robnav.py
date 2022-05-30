@@ -3,7 +3,7 @@ Wall-Following Robot Navigation
 """
 import numpy as np
 
-from ..dataset import PublicDataset
+from ..dataset import Feature, FeatureType, PublicDataset
 from ..files import provide_file
 from ..settings import base_directory
 from ..utility import uci_ml_repo
@@ -15,10 +15,21 @@ class RobotNavigation(PublicDataset):
     """
 
     def __init__(self):
+        # angles from -165 to 165
+        angles = [180] + list(range(-165, 166, 15))
+        features = [
+            Feature(
+                short_name=f"{angle} deg",
+                long_name=f"Ultrasound reading at {angle} degrees",
+                type=FeatureType.NUMERICAL,
+            )
+            for angle in angles
+        ]
         super().__init__(
             safe_name="robnav",
             short_name="Robot Navigation",
             long_name="Wall-Following Robot Navigation",
+            features=features,
             n_samples=5456,
             n_features=24,
             n_classes=4,

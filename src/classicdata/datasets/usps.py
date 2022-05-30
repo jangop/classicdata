@@ -6,7 +6,7 @@ import tarfile
 import numpy as np
 import scipy.io
 
-from ..dataset import PublicDataset, Source
+from ..dataset import Feature, FeatureType, PublicDataset, Source
 from ..files import provide_file
 from ..settings import base_directory
 
@@ -17,10 +17,21 @@ class USPS(PublicDataset):
     """
 
     def __init__(self):
+        features = [
+            Feature(
+                short_name=f"({i}, {j})",
+                long_name=f"Pixel ({i}, {j})",
+                type=FeatureType.NUMERICAL,
+                description=f"Pixel intensity at position ({i}, {j})",
+            )
+            for i in range(16)
+            for j in range(16)
+        ]
         super().__init__(
             safe_name="usps",
             short_name="USPS",
             long_name="USPS Handwritten Digits",
+            features=features,
             n_samples=4649 * 2,
             n_features=256,
             n_classes=10,

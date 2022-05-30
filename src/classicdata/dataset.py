@@ -1,10 +1,11 @@
 """
 Base classes for datasets.
 """
+import enum
 import warnings
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Optional, Union
+from typing import Optional, Sequence, Union
 
 import numpy as np
 from sklearn.model_selection import StratifiedShuffleSplit
@@ -17,6 +18,61 @@ class CitationWarning(UserWarning):
     """
     Reminder to cite a dataset's source.
     """
+
+
+class FeatureTypeMismatch(Exception):
+    """
+    Raised when a feature is of the wrong type.
+    """
+
+
+class FeatureTypeWarning(UserWarning):
+    """
+    Raised when a feature is likely of the wrong type.
+    """
+
+
+class FeatureType(enum.Enum):
+    BINARY = enum.auto()
+    CATEGORICAL = enum.auto()
+    ORDINAL = enum.auto()
+    NUMERICAL = enum.auto()
+    MIXED = enum.auto()
+    UNKNOWN = enum.auto()
+
+    def matches(self, data: np.ndarray) -> bool:
+        """
+        Whether the data matches the feature type.
+        """
+        values, counts = np.unique(data, return_counts=True)
+        n_values = len(values)
+        n_points = len(data)
+        if self == FeatureType.BINARY:
+            if n_values > 2:
+                return False
+        elif self in (FeatureType.CATEGORICAL, FeatureType.ORDINAL):
+            if n_values / n_points > 0.8:
+                warnings.warn(
+                    f"{self.name} feature has {n_values} unique values, "
+                    f"which is over 80% of the total number of points ({n_points}).",
+                    FeatureTypeWarning,
+                )
+        elif self == FeatureType.NUMERICAL:
+            if n_values / n_points < 0.8:
+                warnings.warn(
+                    f"{self.name} feature has {n_values} unique values, "
+                    f"which is less than 80% of the total number of points ({n_points}).",
+                    FeatureTypeWarning,
+                )
+        return True
+
+
+@dataclass
+class Feature:
+    short_name: str
+    long_name: str
+    type: FeatureType
+    description: Optional[str] = None
 
 
 @dataclass
@@ -59,6 +115,7 @@ class Dataset(ABC):
         safe_name: str,
         short_name: str,
         long_name: str,
+        features: Optional[Sequence[Feature]],
         n_samples: Optional[int],
         n_features: Optional[int],
         n_classes: Optional[int],
@@ -67,6 +124,7 @@ class Dataset(ABC):
         self.safe_name = safe_name
         self.short_name = short_name
         self.long_name = long_name
+        self.features = features
         self.n_samples = n_samples
         self.n_features = n_features
         self.n_classes = n_classes
@@ -76,6 +134,12 @@ class Dataset(ABC):
         self._targets: Optional[np.ndarray] = None
         self.label_encoder = LabelEncoder()
         self.loaded: bool = False
+
+        if self.features is not None and self.n_features is not None:
+            if len(self.features) != self.n_features:
+                raise ValueError(
+                    f" {self.n_features} features specified, but {self.features} has length {len(self.features)}"
+                )
 
         # Mention source.
         if self.source is not None:
@@ -116,12 +180,47 @@ class Dataset(ABC):
         ]
         return min(n_samples_per_class) / max(n_samples_per_class)
 
+    @property
+    def feature_type(self) -> FeatureType:
+        """
+        The type of the features.
+        """
+        if self.features is None:
+            return FeatureType.UNKNOWN
+        else:
+            feature_types = {feature.type for feature in self.features}
+            if len(feature_types) == 1:
+                return feature_types.pop()
+            elif feature_types == {FeatureType.BINARY, FeatureType.CATEGORICAL}:
+                return FeatureType.CATEGORICAL
+            elif feature_types <= {
+                FeatureType.BINARY,
+                FeatureType.CATEGORICAL,
+                FeatureType.NUMERICAL,
+            }:
+                return FeatureType.MIXED
+            else:
+                return FeatureType.UNKNOWN
+
     @abstractmethod
     def load(self):
         """
         Expected to fill self._points and self._targets,
         fit self.label_encoder, and set self.loaded.
         """
+
+    def feature_types_match(self, raise_exception: bool) -> bool:
+        if self.features is None:
+            return True
+        matches = [
+            feature.type.matches(self.points[:, i_feature])
+            for i_feature, feature in enumerate(self.features)
+        ]
+        if not all(matches) and raise_exception:
+            raise FeatureTypeMismatch(
+                f"Data does not match feature type for {self.features[matches.index(False)]}"
+            )
+        return all(matches)
 
     def decode_labels(self, encoded_labels):
         """
@@ -178,6 +277,7 @@ class PublicDataset(Dataset, ABC):
         safe_name: str,
         short_name: str,
         long_name: str,
+        features: Optional[Sequence[Feature]] = None,
         n_samples: int,
         n_features: int,
         n_classes: int,
@@ -187,6 +287,7 @@ class PublicDataset(Dataset, ABC):
             safe_name=safe_name,
             short_name=short_name,
             long_name=long_name,
+            features=features,
             n_samples=n_samples,
             n_features=n_features,
             n_classes=n_classes,
@@ -206,6 +307,7 @@ class GenericDataset(Dataset):
         safe_name: str,
         short_name: str,
         long_name: Optional[str] = None,
+        features: Optional[Sequence[Feature]] = None,
         n_samples: Optional[int] = None,
         n_features: Optional[int] = None,
         n_classes: Optional[int] = None,
@@ -217,6 +319,7 @@ class GenericDataset(Dataset):
             safe_name=safe_name,
             short_name=short_name,
             long_name=long_name,
+            features=features,
             n_samples=n_samples,
             n_features=n_features,
             n_classes=n_classes,

@@ -26,6 +26,11 @@ class TestLoading(unittest.TestCase):
                         (dataset_instance.n_samples, dataset_instance.n_features),
                     )
 
+                    # Feature types should be correctly defined.
+                    self.assertTrue(
+                        dataset_instance.feature_types_match(raise_exception=True)
+                    )
+
                     # Number of labels must be defined correctly.
                     self.assertEqual(
                         dataset_instance.labels.shape, (dataset_instance.n_samples,)

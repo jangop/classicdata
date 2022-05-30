@@ -28,6 +28,7 @@ def list_datasets(table_format: str) -> str:
             "Dataset": name,
             "# Samples": dataset.n_samples,
             "# Features": dataset.n_features,
+            "Feature Type": dataset.feature_type.name.lower(),
             "# Classes": dataset.n_classes,
             "Balance": dataset.balance,
         }
